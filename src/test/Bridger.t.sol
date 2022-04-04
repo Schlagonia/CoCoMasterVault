@@ -6,7 +6,7 @@ import "../contracts/Bridger.sol";
 import './mocks/MockERC20.sol';
 import './utils/Cheats.sol';
 
-contract ContractTest is DSTest {
+contract BridgerTest is DSTest {
     CheatCodes internal constant vm = CheatCodes(HEVM_ADDRESS);
     Bridger public bridger;
     MockERC20 public mockERC20;
@@ -70,11 +70,6 @@ contract ContractTest is DSTest {
         uint256 gasFee = bridger.getSwapFee(avaxId, toVault);
 
         assertTrue(gasFee > 0);
-
-        //toVault = [_address];
-
-        //gasFee = bridger.getSwapFee(ethId, toVault);
-        //assertTrue(gasFee > 0);
     }
 
     function testSwap() public {
@@ -84,7 +79,7 @@ contract ContractTest is DSTest {
         vm.prank(tokenHolder);
         IERC20(usdc).transfer(address(bridger), tokenAmount);
 
-        assertEq(IERC20(usdc).balanceOf(tokenHolder), tokenAmount);
+        assertEq(IERC20(usdc).balanceOf(address(bridger)), tokenAmount);
 
         uint256 gasFee = bridger.getSwapFee(avaxId, toVault);
         
@@ -96,6 +91,9 @@ contract ContractTest is DSTest {
         );
 
         assertTrue(success);
+        assertEq(IERC20(usdc).balanceOf(address(bridger)), 0);
+        //tests if the address was refunded the extra gas
+        assertEq(address(bridger).balance, gasFee);
     }
  
 }

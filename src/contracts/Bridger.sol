@@ -5,7 +5,6 @@ import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import "openzeppelin-contracts/contracts/utils/Address.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
-import {IVault} from './interfaces/IVault.sol';
 import { IStargateRouter } from './interfaces/Stargate/IStargateRouter.sol';
 
 contract Bridger is Ownable{
@@ -136,7 +135,7 @@ contract Bridger is Ownable{
         uint256 amountLD,
         bytes memory payload
     ) external {
-        
+
         emit sgReceived(
             _chainId,
             _srcAddress,

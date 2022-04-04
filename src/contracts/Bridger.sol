@@ -21,6 +21,13 @@ contract Bridger is Ownable{
     uint256 slippageProtectionOut = 50; //out of 10000. 50 = 0.5%
     uint256 constant DENOMINATOR = 10_000;
 
+    event sgReceived(
+        uint16 _chainId,
+        bytes _srcAddress,
+        address _token,
+        uint256 amountLD
+    );
+
     constructor(
         address _stargateRouter,
         address _usdc,
@@ -48,7 +55,7 @@ contract Bridger is Ownable{
         address[] memory _vaultTo
     ) external view returns(uint256) {
 
-        bytes memory _toAddress = abi.encodePacked(msg.sender);
+        bytes memory _toAddress = abi.encodePacked(address(this));
         bytes memory _data =  abi.encodePacked(_vaultTo);
 
         (uint256 nativeFee, ) = IStargateRouter(stargateRouter).quoteLayerZeroFee(
@@ -99,7 +106,7 @@ contract Bridger is Ownable{
         uint256 qty = _amount;
         uint256 amountOutMin = getMinOut(_amount);
 
-        bytes memory _toAddress = abi.encodePacked(msg.sender);
+        bytes memory _toAddress = abi.encodePacked(address(this));
         bytes memory data =  abi.encodePacked(_vaultTo);
 
         require(msg.value >= _getSwapFee(chainId, _toAddress, data), "Not enough funds for gas");
@@ -129,7 +136,13 @@ contract Bridger is Ownable{
         uint256 amountLD,
         bytes memory payload
     ) external {
-
+        
+        emit sgReceived(
+            _chainId,
+            _srcAddress,
+            _token,
+            amountLD
+        );
     }
 
     receive() external payable{}

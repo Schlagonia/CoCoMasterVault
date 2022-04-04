@@ -11,7 +11,7 @@ solc:; nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA
 clean  :; forge clean
 
 # Remove modules
-remove :; del .gitmodules && del lib && echo > .gitmodules && git add . && git commit -m "mules"
+remove :; del .gitmodules && del lib && echo > .gitmodules && git add . && git commit -m "modules"
 
 # Install the Modules
 install :; 
